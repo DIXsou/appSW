@@ -2,9 +2,11 @@
     padding: 0;
     border: 0;
 }
+
 #menu {
-    border-radius: 50%;
+    /*margin-left: ;*/
 }
-#menu.img{
-    
+
+#menu img{
+    border-radius: 50%;
 }
