@@ -2,7 +2,7 @@ window.onload = function(){
     var rz = null;
     window.onresize = function(){
         clearTimeout(rz);
-        rz = setTimeout(resizing, 100);
+        rz = setTimeout(resizing, 10);
     };
     resizing();
     
