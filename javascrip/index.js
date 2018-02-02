@@ -1,13 +1,14 @@
 window.onload = function(){
-    var rz = null;
-    window.onresize = function(){
-        clearTimeout(rz);
-        rz = setTimeout(resizing, 10);
-    };
-    resizing();
-    
-    function resizing(){
-        var puntoIntermedioY = window.innerHeight / 2;
+    resizing();  
+}
+var rz = null;
+window.onresize = function(){
+    clearTimeout(rz);
+    rz = setTimeout(resizing, 10);
+};
+
+function resizing(){
+    var puntoIntermedioY = window.innerHeight / 2;
     var puntoIntermedioX = window.innerWidth / 2;
     var dimenciones
     if(puntoIntermedioX >= puntoIntermedioY){
@@ -22,11 +23,13 @@ window.onload = function(){
     imgMenu.style.setProperty("height",dimenciones+"px");
     divMenu.style.setProperty("left",(puntoIntermedioX-(dimenciones/2))+"px");
     divMenu.style.setProperty("top",(puntoIntermedioY-(dimenciones/2))+"px");
-    }
-    
-
-
-    var divOpcion = document.createElement("div").setAttribute("id","opcion");
-
-
 }
+
+var numOpcion = 0;
+function Opcion(identificador,posicion) {
+    this.ident = identificador;
+    this.posic = posicion;
+    numOpcion++;
+    this.idOpcion = numOpcion;
+}
+
