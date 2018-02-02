@@ -4,9 +4,15 @@
 }
 
 #menu {
-    /*margin-left: ;*/
+    position: absolute;
 }
 
 #menu img{
     border-radius: 50%;
+}
+
+#opcion {
+    position: absolute;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
 }
