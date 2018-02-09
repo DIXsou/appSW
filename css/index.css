@@ -11,8 +11,8 @@
     border-radius: 50%;
 }
 
-#opcion {
+div.opcion {
     position: absolute;
-    border-top-right-radius: 50%;
-    border-top-left-radius: 50%;
+    background: black;
+    border-radius: 50%; 
 }
