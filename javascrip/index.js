@@ -9,7 +9,8 @@ window.onresize = function(){
     rz = setTimeout(resizing, 10);
 };
 
-var dimenciones;
+
+var dimenciones = 100;
 var topMenu;
 var leftMenu;
 function resizing(){
@@ -35,9 +36,8 @@ function Opcion(identificador,posicion) {
     this.ident = identificador;
     this.posic = posicion;
 }
-
-Opcion.prototype.dimenOpcion = 100;
 Opcion.prototype.crearOpcion = function () {
+    this.dimenOpcion = (dimenciones/2);
     this.opcion = document.createElement("div"); 
 	this.opcion.style.setProperty("width",this.dimenOpcion + "px") ;
 	this.opcion.style.setProperty("height",this.dimenOpcion + "px") ; 
@@ -60,8 +60,7 @@ Opcion.prototype.crearOpcion = function () {
     this.opcion.style.top = this.topOpcion + "px";
     this.opcion.style.left = this.leftOpcion + "px";
     this.opcion.className = "opcion";
-    this.opcion.id = this.ident + "";
-    this.opcion.appendChild(document.createTextNode("hola"));
+    this.opcion.id = this.ident + "";;
 	document.getElementById("index").appendChild(this.opcion);
 }
 
