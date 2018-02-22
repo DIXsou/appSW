@@ -1,8 +1,12 @@
 window.onload = function(){
-    resizing();
-    opcion1 = new Opcion("opcion1",0);
-    opcion1.crearOpcion();  
+    crearPrincipal();
+    for(var i = 0; i<6;i++){
+        opciones[i] = new Opcion("opcion"+i,i);
+        opciones[i].crearOpcion();
+    }
 }
+
+var opciones = [,,,,,];
 var rz = null;
 window.onresize = function(){
     clearTimeout(rz);
@@ -10,10 +14,10 @@ window.onresize = function(){
 };
 
 
-var dimenciones = 100;
+var dimenciones;
 var topMenu;
 var leftMenu;
-function resizing(){
+function crearPrincipal(){
     var puntoIntermedioY = window.innerHeight / 2;
     var puntoIntermedioX = window.innerWidth / 2;
     if(puntoIntermedioX >= puntoIntermedioY){
@@ -31,36 +35,131 @@ function resizing(){
     divMenu.style.setProperty("left",leftMenu+"px");
     divMenu.style.setProperty("top", topMenu +"px");
 }
+function resizing(){
+    crearPrincipal();
+    for(var i = 0; i<6;i++){
+        opciones[i].situarOpcion();
+    }
+}
 
 function Opcion(identificador,posicion) {
     this.ident = identificador;
     this.posic = posicion;
 }
 Opcion.prototype.crearOpcion = function () {
+    this.divOpcion = document.createElement("div"); 
+    this.divOpcion.className = "opcion";
+    this.divOpcion.id = this.ident + "";
+    this.situarOpcion();
+	document.getElementById("index").appendChild(this.divOpcion);
+}
+Opcion.prototype.situarOpcion = function(){
     this.dimenOpcion = (dimenciones/2);
-    this.opcion = document.createElement("div"); 
-	this.opcion.style.setProperty("width",this.dimenOpcion + "px") ;
-	this.opcion.style.setProperty("height",this.dimenOpcion + "px") ; 
-	switch(this.posic){
+    this.divOpcion.style.setProperty("width",this.dimenOpcion + "px") ;
+	this.divOpcion.style.setProperty("height",this.dimenOpcion + "px") ; 
+    switch(this.posic){
         case 0:
-            this.topOpcion = topMenu - (this.dimenOpcion/2);
+            this.topOpcion = topMenu - (this.dimenOpcion/8) ;
             this.leftOpcion = leftMenu - (this.dimenOpcion/2);
             break;
         case 1:
+            this.topOpcion = topMenu - (this.dimenOpcion/2);
+            this.leftOpcion = leftMenu + (dimenciones/2) - (this.dimenOpcion/2);
             break;
         case 2:
+            this.topOpcion = topMenu - (this.dimenOpcion/8);
+            this.leftOpcion = leftMenu + dimenciones - (this.dimenOpcion/2);
             break;
         case 3:
+            this.topOpcion = topMenu + dimenciones - this.dimenOpcion + (this.dimenOpcion/8);
+            this.leftOpcion = leftMenu - (this.dimenOpcion/2);
             break;
         case 4:
+            this.topOpcion = topMenu + dimenciones - (this.dimenOpcion/2);
+            this.leftOpcion = leftMenu + (dimenciones/2) - (this.dimenOpcion/2);
             break;
         case 5:
+            this.topOpcion = topMenu + dimenciones - this.dimenOpcion + (this.dimenOpcion/8);
+            this.leftOpcion = leftMenu + dimenciones - (this.dimenOpcion/2);
             break;
     }
-    this.opcion.style.top = this.topOpcion + "px";
-    this.opcion.style.left = this.leftOpcion + "px";
-    this.opcion.className = "opcion";
-    this.opcion.id = this.ident + "";;
-	document.getElementById("index").appendChild(this.opcion);
+    this.divOpcion.style.top = this.topOpcion + "px";
+    this.divOpcion.style.left = this.leftOpcion + "px";
+    this.divOpcion.onmouseover = this.mover;
+    this.divOpcion.onmouseout = this.volver;
 }
+
+Opcion.prototype.mover = function(){
+    var antiguoTop = this.style.top.replace("px","")-0;
+    var antiguoleft = this.style.left.replace("px","")-0;
+    var widthDiv = this.style.width.replace("px","")-0;
+    var topDiv;
+    var leftDiv;
+    switch(this.id){
+        case "opcion0":
+            topDiv = antiguoTop - (widthDiv/8);
+            leftDiv = antiguoleft - (widthDiv/8);
+            break;
+        case "opcion1":
+            topDiv = antiguoTop - (widthDiv/4);
+            leftDiv = antiguoleft;
+            break;
+        case "opcion2":
+            topDiv = antiguoTop - (widthDiv/8);
+            leftDiv = antiguoleft + ((widthDiv/8)-0);
+            break;
+        case "opcion3":
+            topDiv = antiguoTop + ((widthDiv/8)-0);
+            leftDiv = antiguoleft - (widthDiv/8);
+            break;
+        case "opcion4":
+            topDiv = antiguoTop + ((widthDiv/4)-0);
+            leftDiv = antiguoleft;
+            break;
+        case "opcion5":
+            topDiv = antiguoTop + ((widthDiv/8)-0);
+            leftDiv = antiguoleft + (widthDiv/8);
+            break;
+    }
+    this.style.top = topDiv + "px";
+    this.style.left = leftDiv + "px";  
+}
+
+Opcion.prototype.volver = function(){
+    var antiguoTop = this.style.top.replace("px","")-0;
+    var antiguoleft = this.style.left.replace("px","")-0;
+    var widthDiv = this.style.width.replace("px","")-0;
+    var topDiv;
+    var leftDiv;
+    switch(this.id){
+        case "opcion0":
+            topDiv = antiguoTop + ((widthDiv/8)-0);
+            leftDiv = antiguoleft + ((widthDiv/8)-0);
+            break;
+        case "opcion1":
+            topDiv = antiguoTop + ((widthDiv/4)-0);
+            leftDiv = antiguoleft;
+            break;
+        case "opcion2":
+            topDiv = antiguoTop + ((widthDiv/8)-0);
+            leftDiv = antiguoleft - (widthDiv/8);
+            break;
+        case "opcion3":
+            topDiv = antiguoTop - (widthDiv/8);
+            leftDiv = antiguoleft + ((widthDiv/8)-0);
+            break;
+        case "opcion4":
+            topDiv = antiguoTop - (widthDiv/4);
+            leftDiv = antiguoleft;
+            break;
+        case "opcion5":
+            topDiv = antiguoTop - (widthDiv/8);
+            leftDiv = antiguoleft - (widthDiv/8);
+            break;
+    }
+    this.style.top = topDiv + "px";
+    this.style.left = leftDiv + "px";  
+}
+
+
 
