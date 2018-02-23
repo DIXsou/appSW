@@ -2,9 +2,14 @@
     padding: 0;
     border: 0;
 }
+body {
+    background-color: rgb(83, 83, 83);
+}
 
 #menu {
+    border-radius: 50%;
     position: absolute;
+    background-color: black;
     z-index: 1;
 }
 
@@ -16,4 +21,11 @@ div.opcion {
     position: absolute;
     background: black;
     border-radius: 50%; 
+}
+
+div.boton {
+    background: rgb(194, 194, 194);
+    position: relative;
+    float: left;
+    
 }
