@@ -31,10 +31,10 @@ function crearPrincipal(){
     var puntoIntermedioX = window.innerWidth / 2;
 
     if(puntoIntermedioX >= puntoIntermedioY){ //si el ancho es mañor o igual al alto de la ventana
-        dimenciones = puntoIntermedioY; // tomamos como guia el alto
+        dimenciones = puntoIntermedioY * 1.2; // tomamos como guia el alto
     }
     else{
-        dimenciones = puntoIntermedioX; // si no el ancho, asi siempre tomamos la dimensión menor
+        dimenciones = puntoIntermedioX * 1.2; // si no el ancho, asi siempre tomamos la dimensión menor
     }
     //los valores del cuerpo principal.
     topMenu = puntoIntermedioY-(dimenciones/2);
@@ -234,14 +234,23 @@ Boton.prototype.crear = function(){
     this.divBoton.className = "boton";
     this.divBoton.id = this.ident + "";
     this.divBoton.appendChild(document.createTextNode(this.titulo));
+    this.paddinBoton = 0;
+    if(this.titulo.length <= 18){
+        this.divBoton.style.paddingTop = dimenciones/40 + "px";
+    }
+    else {
+        this.paddinBoton = dimenciones/40;
+    }
     this.posicionar();
 	divMenu.appendChild(this.divBoton);
 }
 
 Boton.prototype.posicionar = function(){
-    this.divBoton.style.top = dimenciones/4 +"px";
-    this.divBoton.style.left = dimenciones/16 +"px";
-    this.divBoton.style.margin = dimenciones/25+"px";
+    this.divBoton.style.top = dimenciones/7 +"px";
+    this.divBoton.style.left = dimenciones/8 +"px";
+    this.divBoton.style.margin = dimenciones/50+"px";
+    this.divBoton.style.height = (dimenciones/14 + this.paddinBoton-0) + "px";
+    this.divBoton.style.width = dimenciones/3 +"px";
     this.divBoton.style.fontSize = dimenciones/26 + "px";
 }
 
