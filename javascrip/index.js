@@ -1,12 +1,17 @@
+/**
+ * En mi aplicacion me he centrado en que sea Recizable para cualquier tipo de pantalla y ventana
+ */
+
 window.onload = function(){
-    crearPrincipal();
-    imagenInicial();
-    for(var i = 0; i<6;i++){
+    crearPrincipal(); //crear la ventana principal
+    divMenu.style.backgroundImage = "url('./image/init_index.png')"; //poner la imagen inicial como fondo del cuerpo principal
+    for(var i = 0; i<6;i++){ //bucle para crear las opciones.
         opciones[i] = new Opcion("opcion"+i,i);
         opciones[i].crearOpcion();
     }
 }
-var opcionActual = null;
+
+var opcionActual = null; //variable global para saber en que opcion se está
 
 //recizable
 var rz = null;
@@ -15,20 +20,23 @@ window.onresize = function(){
     rz = setTimeout(resizing, 10);
 };
 
-
-var dimenciones;
+//cuerpo principal
+var dimenciones; //El secreto de que sea todo Recizable es que todo esta en base a esta variable
 var topMenu;
 var leftMenu;
 var divMenu
 function crearPrincipal(){
-    var puntoIntermedioY = window.innerHeight / 2;
+    //esta variable depende del tamaño de la ventana
+    var puntoIntermedioY = window.innerHeight / 2; 
     var puntoIntermedioX = window.innerWidth / 2;
-    if(puntoIntermedioX >= puntoIntermedioY){
-        dimenciones = puntoIntermedioY;
+
+    if(puntoIntermedioX >= puntoIntermedioY){ //si el ancho es mañor o igual al alto de la ventana
+        dimenciones = puntoIntermedioY; // tomamos como guia el alto
     }
     else{
-        dimenciones = puntoIntermedioX;
+        dimenciones = puntoIntermedioX; // si no el ancho, asi siempre tomamos la dimensión menor
     }
+    //los valores del cuerpo principal.
     topMenu = puntoIntermedioY-(dimenciones/2);
     leftMenu = puntoIntermedioX-(dimenciones/2);
     divMenu = document.getElementById("menu");
@@ -37,21 +45,20 @@ function crearPrincipal(){
     divMenu.style.setProperty("left",leftMenu+"px");
     divMenu.style.setProperty("top", topMenu +"px");
 }
+
+//La funcion para que sea resizable
 function resizing(){
-    crearPrincipal();
-    for(var i = 0; i<opciones.length;i++){
+    crearPrincipal(); //vuelve a valorar el ancho y alto de la ventana para el tamaño del cuerpo principal
+    for(var i = 0; i<opciones.length;i++){ //recalcula las distintas dimensiones de las opciones
         opciones[i].situarOpcion();
     }
-    if(opcionActual != null){
-        for(var i = 0; i<botones.length;i++){
+    if(opcionActual != null){ //si estamos en cualquier opcion que no sea el inicial
+        for(var i = 0; i<botones.length;i++){ //recalculamos las dimensiones de los distintos botones
             botones[i].posicionar();
         }
     }
 }
 
-function imagenInicial(){
-    divMenu.style.backgroundImage = "url('./image/init_index.png')";
-}
 
 //Objeto opciones
 var opciones = [,,,,,];//variable donde se guardarán los apuntadores a todas las opciones;
@@ -64,14 +71,11 @@ Opcion.prototype.crearOpcion = function () {
     this.divOpcion = document.createElement("div"); 
     this.divOpcion.className = "opcion";
     this.divOpcion.id = this.ident + "";
-    this.situarOpcion();
+    this.situarOpcion(); //la funcion para situar las distintas opciones y el valor del src de la imagen
     this.divOpcion.onmouseover = this.mover;
     this.divOpcion.onmouseout = this.volver;
     this.divOpcion.onclick = this.clickOpcion;
     this.divOpcion.style.backgroundImage = "url('"+this.srcImagen+"')";
-    this.divOpcion.style.backgroundPosition = "center";
-    this.divOpcion.style.backgroundRepeat = "no-repeat";
-    this.divOpcion.style.backgroundSize = "contain";
 	document.getElementById("index").appendChild(this.divOpcion);
 }
 Opcion.prototype.situarOpcion = function(){
@@ -116,6 +120,7 @@ Opcion.prototype.situarOpcion = function(){
     
 }
 
+//métodos para la interaccion de cada div de opcion
 Opcion.prototype.mover = function(){
     var antiguoTop = this.style.top.replace("px","")-0;
     var antiguoleft = this.style.left.replace("px","")-0;
@@ -218,7 +223,7 @@ Opcion.prototype.clickOpcion = function() {
 }
 
 //Objeto boton
-var botones = [,,,,,,,,,];
+var botones = [,,,,,,,,,];//array para guardar opciones
 function Boton(iden,titulo){
     this.ident = iden;
     this.titulo = titulo;
@@ -243,6 +248,7 @@ Boton.prototype.posicionar = function(){
 
 
 //descarga de la API
+//constantes que utilizaré pra las llamadas al servidor
 const raizAPI = "https://swapi.co/api/";
 const personajesAPI = "people/";
 const peliculasAPI = "films/";
@@ -252,8 +258,10 @@ const navesAPI = "starships/";
 const pagAPI = "?page=";
 
 function descargaArchivo(url) {
+    //pantalla de carga
     borrarCuerpo(); //borro el interior
-    divMenu.style.backgroundImage = "url('./image/fondo_cargando.png')";
+    divMenu.style.backgroundImage = "url('./image/fondo_cargando.png')"; // pongo como fondo la imagen
+
     // Obtener la instancia del objeto XMLHttpRequest
     if(window.XMLHttpRequest) {
         peticion_http = new XMLHttpRequest();
@@ -261,8 +269,10 @@ function descargaArchivo(url) {
     else if(window.ActiveXObject) {
         peticion_http = new ActiveXObject("Microsoft.XMLHTTP");
     }
+
     // Preparar la funcion de respuesta
     peticion_http.onreadystatechange = muestraContenido;
+
     // Realizar peticion HTTP
     peticion_http.open('GET', url, true);
     peticion_http.send(null);
@@ -278,7 +288,8 @@ function descargaArchivo(url) {
 
 //funciones de creador y borrado del cuerpo principal
 
-function borrarCuerpo(){
+//borra el fondo y los div que estan dentro del cuerpo principal "divMenu"
+function borrarCuerpo(){ 
     if(divMenu.style.backgroundImage != null){
         divMenu.style.backgroundImage = null;
     }
@@ -288,9 +299,11 @@ function borrarCuerpo(){
 }
 
 
-
+//genera todo el cuerpo principal
 function crearCuerpo(resultadoJson){
-    borrarCuerpo();
+    borrarCuerpo();//para borrar la pantalla de carga
+    
+    //la API viene paginada por gupos de 10 elementos, aqui valoro si esta paginada o no
     var maxNumBotones;
     if(resultadoJson.count < 10){
         maxNumBotones = resultadoJson.count;
@@ -299,6 +312,7 @@ function crearCuerpo(resultadoJson){
         maxNumBotones = 10;
     }
 
+    //la funcion cuando se da click en uno de los bontones
     function onclickBoton(evento){
         var aux = resultadoJson.results[evento.target.id];
         var divPrincipal = document.createElement("div");
@@ -338,10 +352,16 @@ function crearCuerpo(resultadoJson){
         }
     }
 
+    //la creacion de todos los botones
     for(var i = 0; i < maxNumBotones; i++ ){
         botones[i] = new Boton(i,resultadoJson.results[i].name || resultadoJson.results[i].title);
         botones[i].crear();
         botones[i].divBoton.onclick = onclickBoton;
     }
-   
+   //falta la creacion de la paginacion
 }
+/**
+ * Me queda por hacer todo el css, pues solo esta puesto lo basico y comun,
+ * implementar la paginacion y crear bien las cartas informativas de cada elemento,
+ * asi como poner fotos, bordes y calcular mejor el tamaño de las letras.
+ */

@@ -23,7 +23,10 @@ body {
 div.opcion {
     position: absolute;
     background: black;
-    border-radius: 50%; 
+    border-radius: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 div.boton {
