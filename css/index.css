@@ -29,3 +29,11 @@ div.boton {
     float: left;
     
 }
+
+#cartaInformativa{
+    background-image: url(../image/fondo_carta.png);
+    position: absolute;
+    text-align: center;
+    z-index: 1;
+    color: rgb(250, 250, 65);
+}

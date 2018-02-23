@@ -1,13 +1,14 @@
 window.onload = function(){
     crearPrincipal();
+    resizingImagen();
     for(var i = 0; i<6;i++){
         opciones[i] = new Opcion("opcion"+i,i);
         opciones[i].crearOpcion();
     }
 }
+var opcionActual = null;
 
 //recizable
-
 var rz = null;
 window.onresize = function(){
     clearTimeout(rz);
@@ -31,9 +32,6 @@ function crearPrincipal(){
     topMenu = puntoIntermedioY-(dimenciones/2);
     leftMenu = puntoIntermedioX-(dimenciones/2);
     divMenu = document.getElementById("menu");
-    var imgMenu = document.getElementById("imgMenu");
-    //imgMenu.style.setProperty("width",dimenciones+"px");
-    //imgMenu.style.setProperty("height",dimenciones+"px");
     divMenu.style.setProperty("width",dimenciones+"px");
     divMenu.style.setProperty("height",dimenciones+"px");
     divMenu.style.setProperty("left",leftMenu+"px");
@@ -44,9 +42,20 @@ function resizing(){
     for(var i = 0; i<opciones.length;i++){
         opciones[i].situarOpcion();
     }
-    for(var i = 0; i<botones.length;i++){
-        botones[i].posicionar();
+    if(opcionActual == null){
+        resizingImagen();
     }
+    else{
+        for(var i = 0; i<botones.length;i++){
+            botones[i].posicionar();
+        }
+    }
+}
+
+function resizingImagen(){
+    var imgMenu = document.getElementById("imgMenu");
+    imgMenu.style.setProperty("width",dimenciones+"px");
+    imgMenu.style.setProperty("height",dimenciones+"px");
 }
 
 //Objeto opciones
@@ -187,22 +196,28 @@ Opcion.prototype.volver = function(){
 Opcion.prototype.clickOpcion = function() {
     switch(this.id){
         case "opcion0":
-            descargaArchivo(raizAPI+personajesAPI,0);
+            opcionActual = 0;
+            descargaArchivo(raizAPI+personajesAPI);
             break;
         case "opcion1":
-            descargaArchivo(raizAPI+peliculasAPI,1);
+            opcionActual = 1;
+            descargaArchivo(raizAPI+peliculasAPI);
             break;
         case "opcion2":
-            descargaArchivo(raizAPI+especiesAPI,2);
+            opcionActual = 2;
+            descargaArchivo(raizAPI+especiesAPI);
             break;
         case "opcion3":
-            descargaArchivo(raizAPI+vehiculosAPI,3);
+            opcionActual = 3;
+            descargaArchivo(raizAPI+vehiculosAPI);
             break;
         case "opcion4":
-            opcionAtras();
+            opcionActual = null;
+            location.reload(true);
             break;
         case "opcion5":
-            descargaArchivo(raizAPI+navesAPI,4);
+            opcionActual = 4;
+            descargaArchivo(raizAPI+navesAPI);
             break;
     }
 }
@@ -240,9 +255,7 @@ const especiesAPI = "species/";
 const vehiculosAPI = "vehicles/";
 const navesAPI = "starships/";
 const pagAPI = "?page=";
-//var resultadoJson = [null,null,null,null,null];
 
-//MEJORAR ESTO SEGURO QUE HAY OTRA OPCION
 function descargaArchivo(url) {
     // Obtener la instancia del objeto XMLHttpRequest
     if(window.XMLHttpRequest) {
@@ -266,11 +279,6 @@ function descargaArchivo(url) {
 }
 
 
-
-
-
-
-
 //funciones de creador y borrado del cuerpo principal
 
 function borrarCuerpo(){
@@ -290,9 +298,50 @@ function crearCuerpo(resultadoJson){
     else {
         maxNumBotones = 10;
     }
+
+    function onclickBoton(evento){
+        var aux = resultadoJson.results[evento.target.id];
+        var divPrincipal = document.createElement("div");
+        divPrincipal.id= "cartaInformativa";
+        var textoCarta1 = "" //provicional
+        switch(opcionActual){
+            case 0:
+                textoCarta = "Name: " + aux.name  + " Heigth: " + aux.height + "  Gender: " + aux.gender + " Brith Day: " + aux.birth_year + 
+                "  Hair Color: " + aux.hair_color + " Eye Color: " + aux.eye_color;
+                break;
+            case 1:
+                textoCarta = "Title: "+ aux.title + " Episode: "+ aux.episode_id + "  Director: " + aux.director + " Producers: " + aux.producer +
+                "  Release Date: " + aux.release_date;
+                break;
+            case 2:
+                textoCarta = "Name: " + aux.name  + " Lifespan: " + aux.average_lifespan + "  Languages: "+ aux.language + " Height: " + aux.average_height +
+                "  Classification: " + aux.classification + " Designation: "+ aux.designation;
+                break;
+            case 3:
+                textoCarta = "Name: " + aux.name  
+                break;
+            case 4:
+                textoCarta = "Name: " + aux.name  
+                break;
+        }
+        var h3 = document.createElement("h3");
+        h3.appendChild(document.createTextNode(textoCarta));
+        divPrincipal.appendChild(h3);
+        divPrincipal.style.top = (dimenciones/10) + "px";
+        divPrincipal.style.left = (dimenciones /10) + "px";
+        divPrincipal.style.height = dimenciones - (dimenciones/10) + "px";
+        divPrincipal.style.width = dimenciones - (dimenciones/10) + "px";
+        divPrincipal.style.fontSize = dimenciones/15 + "px";
+        divMenu.appendChild(divPrincipal);
+        divPrincipal.onclick = function(){
+            divMenu.removeChild(divMenu.lastChild);
+        }
+    }
+
     for(var i = 0; i < maxNumBotones; i++ ){
         botones[i] = new Boton(i,resultadoJson.results[i].name || resultadoJson.results[i].title);
         botones[i].crear();
+        botones[i].divBoton.onclick = onclickBoton;
     }
 }
 
