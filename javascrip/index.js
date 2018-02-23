@@ -1,6 +1,6 @@
 window.onload = function(){
     crearPrincipal();
-    resizingImagen();
+    imagenInicial();
     for(var i = 0; i<6;i++){
         opciones[i] = new Opcion("opcion"+i,i);
         opciones[i].crearOpcion();
@@ -42,20 +42,15 @@ function resizing(){
     for(var i = 0; i<opciones.length;i++){
         opciones[i].situarOpcion();
     }
-    if(opcionActual == null){
-        resizingImagen();
-    }
-    else{
+    if(opcionActual != null){
         for(var i = 0; i<botones.length;i++){
             botones[i].posicionar();
         }
     }
 }
 
-function resizingImagen(){
-    var imgMenu = document.getElementById("imgMenu");
-    imgMenu.style.setProperty("width",dimenciones+"px");
-    imgMenu.style.setProperty("height",dimenciones+"px");
+function imagenInicial(){
+    divMenu.style.backgroundImage = "url('./image/init_index.png')";
 }
 
 //Objeto opciones
@@ -213,7 +208,7 @@ Opcion.prototype.clickOpcion = function() {
             break;
         case "opcion4":
             opcionActual = null;
-            location.reload(true);
+
             break;
         case "opcion5":
             opcionActual = 4;
@@ -257,6 +252,8 @@ const navesAPI = "starships/";
 const pagAPI = "?page=";
 
 function descargaArchivo(url) {
+    borrarCuerpo(); //borro el interior
+    divMenu.style.backgroundImage = "url('./image/fondo_cargando.png')";
     // Obtener la instancia del objeto XMLHttpRequest
     if(window.XMLHttpRequest) {
         peticion_http = new XMLHttpRequest();
@@ -282,6 +279,9 @@ function descargaArchivo(url) {
 //funciones de creador y borrado del cuerpo principal
 
 function borrarCuerpo(){
+    if(divMenu.style.backgroundImage != null){
+        divMenu.style.backgroundImage = null;
+    }
     while(divMenu.firstChild) {
         divMenu.removeChild(divMenu.firstChild);
     }
@@ -343,5 +343,5 @@ function crearCuerpo(resultadoJson){
         botones[i].crear();
         botones[i].divBoton.onclick = onclickBoton;
     }
+   
 }
-
