@@ -208,7 +208,7 @@ Opcion.prototype.clickOpcion = function() {
             break;
         case "opcion4":
             opcionActual = null;
-
+            location.reload(true);
             break;
         case "opcion5":
             opcionActual = 4;
