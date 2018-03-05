@@ -16,13 +16,20 @@ body {
     background-size: contain;  
 }
 
-#menu img{
-    border-radius: 50%;
-}
+
 
 div.opcion {
     position: absolute;
     background: black;
+    border-radius: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.miniatura {
+    position: absolute;
+    background: rgb(83, 83, 83);
     border-radius: 50%;
     background-position: center;
     background-repeat: no-repeat;
@@ -35,7 +42,9 @@ div.boton {
     float: left;
     size: auto;
     text-align: center;
-    border-radius:2%;
+    padding: auto;
+    border-radius:5%;
+    user-select: none;
 }
 
 

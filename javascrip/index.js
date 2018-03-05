@@ -9,9 +9,11 @@ window.onload = function(){
         opciones[i] = new Opcion("opcion"+i,i);
         opciones[i].crearOpcion();
     }
+    
 }
 
 var opcionActual = null; //variable global para saber en que opcion se está
+var musica = true;
 
 //recizable
 var rz = null;
@@ -24,17 +26,17 @@ window.onresize = function(){
 var dimenciones; //El secreto de que sea todo Recizable es que todo esta en base a esta variable
 var topMenu;
 var leftMenu;
-var divMenu
+var divMenu;
 function crearPrincipal(){
     //esta variable depende del tamaño de la ventana
     var puntoIntermedioY = window.innerHeight / 2; 
     var puntoIntermedioX = window.innerWidth / 2;
 
     if(puntoIntermedioX >= puntoIntermedioY){ //si el ancho es mañor o igual al alto de la ventana
-        dimenciones = puntoIntermedioY * 1.2; // tomamos como guia el alto
+        dimenciones = puntoIntermedioY * 1.1; // tomamos como guia el alto
     }
     else{
-        dimenciones = puntoIntermedioX * 1.2; // si no el ancho, asi siempre tomamos la dimensión menor
+        dimenciones = puntoIntermedioX * 1.1; // si no el ancho, asi siempre tomamos la dimensión menor
     }
     //los valores del cuerpo principal.
     topMenu = puntoIntermedioY-(dimenciones/2);
@@ -56,7 +58,17 @@ function resizing(){
         for(var i = 0; i<botones.length;i++){ //recalculamos las dimensiones de los distintos botones
             botones[i].posicionar();
         }
+        if(btAnterior != null){
+            btAnterior.posicionar();
+        }
+        if(btSiguiente != null){
+            btSiguiente.posicionar();
+        }
+        if(cartaInformativa != null){
+            cartaInformativa.posicionar();
+        }
     }
+
 }
 
 
@@ -106,7 +118,7 @@ Opcion.prototype.situarOpcion = function(){
         case 4:
             this.topOpcion = topMenu + dimenciones - (this.dimenOpcion/2);
             this.leftOpcion = leftMenu + (dimenciones/2) - (this.dimenOpcion/2);
-            this.srcImagen = "./image/opcion_inicio.png";
+            this.srcImagen = "./image/opcion_pause.png";
             break;
         case 5:
             this.topOpcion = topMenu + dimenciones - this.dimenOpcion + (this.dimenOpcion/8);
@@ -193,7 +205,11 @@ Opcion.prototype.volver = function(){
     this.style.left = leftDiv + "px";  
 }
 
+
 Opcion.prototype.clickOpcion = function() {
+    if(this.id != "opcion4"){
+        paginaActual = 0;
+    }
     switch(this.id){
         case "opcion0":
             opcionActual = 0;
@@ -212,8 +228,17 @@ Opcion.prototype.clickOpcion = function() {
             descargaArchivo(raizAPI+vehiculosAPI);
             break;
         case "opcion4":
-            opcionActual = null;
-            location.reload(true);
+            if(musica){
+                this.style.backgroundImage = "url('./image/opcion_play.png')";
+                document.getElementById("music").pause();
+                musica = false;
+            }
+            else{
+                this.style.backgroundImage = "url('./image/opcion_pause.png')";
+                document.getElementById("music").play();
+                musica = true;
+            }
+            
             break;
         case "opcion5":
             opcionActual = 4;
@@ -223,7 +248,7 @@ Opcion.prototype.clickOpcion = function() {
 }
 
 //Objeto boton
-var botones = [,,,,,,,,,];//array para guardar opciones
+var botones  = new Array();//array para guardar opciones
 function Boton(iden,titulo){
     this.ident = iden;
     this.titulo = titulo;
@@ -235,12 +260,12 @@ Boton.prototype.crear = function(){
     this.divBoton.id = this.ident + "";
     this.divBoton.appendChild(document.createTextNode(this.titulo));
     this.paddinBoton = 0;
-    if(this.titulo.length <= 18){
+    if(this.titulo.length <= 14){
         this.divBoton.style.paddingTop = dimenciones/40 + "px";
     }
     else {
         this.paddinBoton = dimenciones/40;
-    }
+    } 
     this.posicionar();
 	divMenu.appendChild(this.divBoton);
 }
@@ -249,11 +274,221 @@ Boton.prototype.posicionar = function(){
     this.divBoton.style.top = dimenciones/7 +"px";
     this.divBoton.style.left = dimenciones/8 +"px";
     this.divBoton.style.margin = dimenciones/50+"px";
-    this.divBoton.style.height = (dimenciones/14 + this.paddinBoton-0) + "px";
+    this.divBoton.style.height = (dimenciones/13  + this.paddinBoton-0) + "px";
     this.divBoton.style.width = dimenciones/3 +"px";
-    this.divBoton.style.fontSize = dimenciones/26 + "px";
+    this.divBoton.style.fontSize = dimenciones/340 + "em";
 }
 
+//Objetos Botones Azanzar y restroceder
+var btSiguiente = null;
+var btAnterior = null;
+const BOTON_SIGUIENTE = 1;
+const BOTON_ANTERIOR = 0;
+
+function BotonPaginacion(iden,tipo){
+    this.iden = iden;
+    this.tipo = tipo;
+}
+
+BotonPaginacion.prototype.crear = function(){
+    this.divBoton = document.createElement("div");
+    this.divBoton.className = "opcion";
+    this.divBoton.id = this.iden + "";
+    this.posicionar();
+    divMenu.appendChild(this.divBoton);
+}
+
+BotonPaginacion.prototype.posicionar = function(){
+    this.divBoton.style.top = dimenciones/2 - dimenciones/20 +"px";
+    this.divBoton.style.height = dimenciones/10 + "px";
+    this.divBoton.style.width = dimenciones/10 +"px";
+    if(this.tipo == BOTON_SIGUIENTE){
+        this.divBoton.style.left = dimenciones - dimenciones/8 +"px";
+        this.divBoton.style.backgroundImage = "url('./image/bt_siguiente.png')";
+    }
+    else{
+        this.divBoton.style.left = dimenciones/40 +"px";
+        this.divBoton.style.backgroundImage = "url('./image/bt_anterior.png')";
+    }
+    
+}
+
+//Objeto Carta de Informacion
+var cartaInformativa = null;
+function CartaInfo(titulo){
+    this.divCarta = document.createElement("div");
+    this.divCarta.id = "cartaInformativa"
+    this.titulo = titulo;
+    switch(opcionActual){
+        case 0:
+            this.height;
+            this.mass;
+			this.hairColor;
+			this.skinColor;
+			this.eyeColor;
+			this.birthYear;
+            this.gender;
+            break;
+        case 1:
+            this.episodeId;
+            this.openingCrawl;
+            this.director;
+            this.producer;
+            this.releaseDate;
+            break;
+        case 2:
+            this.classification;
+            this.designation;
+            this.average_height;
+            this.skinColors;
+            this.hairColors;
+            this.eyeColors;
+            this.averageLifespan;
+            this.language;
+            break;
+        case 3:
+            this.model;
+            this.manufacturer;
+            this.cost;
+            this.length;
+            this.maxAtmospheringSpeed;
+            this.crew;
+            this.passengers;
+            this.cargoCapacity;
+            this.consumables;
+            this.vehicleClass;
+            break;
+        case 4:
+            this.model;
+            this.manufacturer;
+            this.cost;
+            this.length;
+            this.maxAtmospheringSpeed;
+            this.crew;
+            this.passengers;
+            this.cargoCapacity;
+            this.consumables;
+            this.hyperdriveRating;
+            this.MGLT;
+            this.starship_class;
+            break;
+    }
+
+    this.divCerrar = document.createElement("div");
+    this.divCerrar.className = "opcion";
+    this.divCerrar.style.backgroundImage = "url('./image/cerrar.png')";
+    
+    this.divMiniatura = document.createElement("div");
+    this.divMiniatura.className = "miniatura";
+    this.divMiniatura.style.backgroundImage = "url('./image/miniatura.png')";
+
+    this.posicionar();
+}
+
+
+CartaInfo.prototype.posicionar = function(){
+    var auxWidth = dimenciones *1.5;
+    this.divCarta.style.top = topMenu - (dimenciones/4) +"px";
+    this.divCarta.style.left = leftMenu - (dimenciones/4) +"px";
+    this.divCarta.style.height = (dimenciones * 1.6) + "px";
+    this.divCarta.style.width = auxWidth +"px";
+    this.divCarta.style.fontSize = dimenciones/340 + "em";
+
+    this.divCerrar.style.top = dimenciones/30 +"px";
+    this.divCerrar.style.left = auxWidth - dimenciones/8 +"px";
+    this.divCerrar.style.height = dimenciones/12  + "px";
+    this.divCerrar.style.width = dimenciones/12 +"px";
+
+    this.divMiniatura.style.height = dimenciones/5  + "px";
+    this.divMiniatura.style.width = dimenciones/5 +"px";
+}
+
+CartaInfo.prototype.mostrar = function(){
+    var titulo = document.createElement("h1");
+    titulo.appendChild(document.createTextNode(this.titulo));
+    this.divCarta.appendChild(titulo);
+    switch(opcionActual){
+        case 0:
+            crearTexto(this.divCarta,"Height: "+ this.height);
+            crearTexto(this.divCarta,"Mass: "+ this.mass);
+			crearTexto(this.divCarta,"Hair Color: "+ this.hairColor);
+			crearTexto(this.divCarta,"Skin Color: "+ this.skinColor);
+			crearTexto(this.divCarta,"Eye Color: "+ this.eyeColor);
+			crearTexto(this.divCarta,"BirthYear: "+ this.birthYear);
+            crearTexto(this.divCarta,"gender: "+this.gender);
+            break;
+        case 1:
+            crearTexto(this.divCarta,"Episode: "+this.episodeId);
+            crearTexto(this.divCarta,"Opening Crawl: "+this.openingCrawl);
+            crearTexto(this.divCarta,"Director: "+this.director);
+            crearTexto(this.divCarta,"Producer: "+this.producer);
+            crearTexto(this.divCarta,"Release Date "+this.releaseDate);
+            break;
+        case 2:
+            crearTexto(this.divCarta,"Classification: "+this.classification);
+            crearTexto(this.divCarta,"Designation: "+this.designation);
+            crearTexto(this.divCarta,"Average Height: "+this.average_height);
+            crearTexto(this.divCarta,"Skin Colors: "+this.skinColors);
+            crearTexto(this.divCarta,"Hair Colors: "+this.hairColors);
+            crearTexto(this.divCarta,"Eye Colors: "+this.eyeColors);
+            crearTexto(this.divCarta,"Average Lifespan: "+this.averageLifespan);
+            crearTexto(this.divCarta,"Language: "+this.language);
+            break;
+        case 3:
+            crearTexto(this.divCarta,"Model: "+this.model);
+            crearTexto(this.divCarta,"Manufacturer: "+this.manufacturer);
+            crearTexto(this.divCarta,"Cost: "+this.cost);
+            crearTexto(this.divCarta,"Length: "+this.length);
+            crearTexto(this.divCarta,"Max Atmosphering Speed: "+this.maxAtmospheringSpeed);
+            crearTexto(this.divCarta,"Crew: "+this.crew);
+            crearTexto(this.divCarta,"Passengers: "+this.passengers);
+            crearTexto(this.divCarta,"Cargo Capacity: "+this.cargoCapacity);
+            crearTexto(this.divCarta,"Consumables: "+this.consumables);
+            crearTexto(this.divCarta,"Vehicle Class: "+this.vehicleClass);
+            break;
+        case 4:
+            crearTexto(this.divCarta,"Model: "+this.model);
+            crearTexto(this.divCarta,"Manufacturer: "+this.manufacturer);
+            crearTexto(this.divCarta,"Cost: "+this.cost);
+            crearTexto(this.divCarta,"Length: "+this.length);
+            crearTexto(this.divCarta,"Max Atmosphering Speed: "+this.maxAtmospheringSpeed);
+            crearTexto(this.divCarta,"Crew: "+this.crew);
+            crearTexto(this.divCarta,"Passengers: "+this.passengers);
+            crearTexto(this.divCarta,"Cargo Capacity: "+this.cargoCapacity);
+            crearTexto(this.divCarta,"Consumables: "+this.consumables);
+            crearTexto(this.divCarta,"Hyperdrive Rating: "+this.hyperdriveRating);
+            crearTexto(this.divCarta,"MGLT: "+this.MGLT);
+            crearTexto(this.divCarta,"Starship Class: "+this.starship_class);
+            break; 
+    }
+    this.divCerrar.onclick = onClickCerrar;
+    this.divCarta.appendChild(this.divCerrar);
+
+    this.divMiniatura.onclick = onClickCerrar;
+    document.getElementById("index").appendChild(this.divMiniatura);
+
+    document.onkeydown = onClickCerrar;
+    document.getElementById("index").appendChild(this.divCarta);
+}
+
+function onClickCerrar(event){
+    var tecla = event.which;
+    var padre =  document.getElementById("index");
+    if(padre.childElementCount > 7){
+        if(tecla == 27 || tecla == 1){
+            padre.removeChild(padre.lastChild);
+            padre.removeChild(padre.lastChild);
+        }
+    }
+    
+}
+
+
+function crearTexto(elemento,texto){
+    var h3 = document.createElement("h3");
+    h3.appendChild(document.createTextNode(texto));
+    elemento.appendChild(h3);
+}
 
 
 //descarga de la API
@@ -264,7 +499,6 @@ const peliculasAPI = "films/";
 const especiesAPI = "species/";
 const vehiculosAPI = "vehicles/";
 const navesAPI = "starships/";
-const pagAPI = "?page=";
 
 function descargaArchivo(url) {
     //pantalla de carga
@@ -309,57 +543,85 @@ function borrarCuerpo(){
 
 
 //genera todo el cuerpo principal
+var paginaActual;
 function crearCuerpo(resultadoJson){
     borrarCuerpo();//para borrar la pantalla de carga
+    crearPaginacion();
     
     //la API viene paginada por gupos de 10 elementos, aqui valoro si esta paginada o no
     var maxNumBotones;
-    if(resultadoJson.count < 10){
-        maxNumBotones = resultadoJson.count;
+    var numBotonesRestantes = resultadoJson.count - (10*paginaActual);
+    if(numBotonesRestantes < 10){
+        maxNumBotones = numBotonesRestantes;
     }
     else {
         maxNumBotones = 10;
     }
-
+    
     //la funcion cuando se da click en uno de los bontones
     function onclickBoton(evento){
         var aux = resultadoJson.results[evento.target.id];
-        var divPrincipal = document.createElement("div");
-        divPrincipal.id= "cartaInformativa";
-        var textoCarta1 = "" //provicional
+        cartaInformativa = new CartaInfo(aux.name||aux.title);
         switch(opcionActual){
             case 0:
-                textoCarta = "Name: " + aux.name  + " Heigth: " + aux.height + "  Gender: " + aux.gender + " Brith Day: " + aux.birth_year + 
-                "  Hair Color: " + aux.hair_color + " Eye Color: " + aux.eye_color;
+                cartaInformativa.height = aux.height;
+                cartaInformativa.mass = aux.mass;
+                cartaInformativa.hairColor = aux.hair_color;
+                cartaInformativa.skinColor = aux.skin_color;
+                cartaInformativa.eyeColor = aux.eye_color;
+                cartaInformativa.birthYear = aux.birth_year;
+                cartaInformativa.gender = aux.gender;
                 break;
             case 1:
-                textoCarta = "Title: "+ aux.title + " Episode: "+ aux.episode_id + "  Director: " + aux.director + " Producers: " + aux.producer +
-                "  Release Date: " + aux.release_date;
+                cartaInformativa.episodeId = aux.episode_id;
+                cartaInformativa.openingCrawl = aux.opening_crawl;
+                cartaInformativa.director = aux.director;
+                cartaInformativa.producer = aux.producer;
+                cartaInformativa.releaseDate = aux.release_date;
                 break;
             case 2:
-                textoCarta = "Name: " + aux.name  + " Lifespan: " + aux.average_lifespan + "  Languages: "+ aux.language + " Height: " + aux.average_height +
-                "  Classification: " + aux.classification + " Designation: "+ aux.designation;
+                cartaInformativa.classification = aux.classification;
+                cartaInformativa.designation = aux.designation;
+                cartaInformativa.average_height = aux.average_height;
+                cartaInformativa.skinColors = aux.skin_colors;
+                cartaInformativa.hairColors = aux.hair_colors;
+                cartaInformativa.eyeColors = aux.eye_colors;
+                cartaInformativa.averageLifespan = aux.average_lifespan;
+                cartaInformativa.language = aux.language;
                 break;
             case 3:
-                textoCarta = "Name: " + aux.name  
+                cartaInformativa.model = aux.model;
+                cartaInformativa.manufacturer = aux.manufacturer;
+                cartaInformativa.cost = aux.cost_in_credits;
+                cartaInformativa.length = aux.length;
+                cartaInformativa.maxAtmospheringSpeed = aux.max_atmosphering_speed;
+                cartaInformativa.crew = aux.crew;
+                cartaInformativa.passengers = aux.passengers;
+                cartaInformativa.cargoCapacity = aux.cargo_capacity;
+                cartaInformativa.consumables = aux.consumables;
+                cartaInformativa.vehicleClass = aux.vehicle_class;
                 break;
             case 4:
-                textoCarta = "Name: " + aux.name  
+                cartaInformativa.model = aux.model;
+                cartaInformativa.manufacturer = aux.manufacturer;
+                cartaInformativa.cost = aux.cost_in_credits;
+                cartaInformativa.length = aux.length;
+                cartaInformativa.maxAtmospheringSpeed = aux.max_atmosphering_speed;
+                cartaInformativa.crew = aux.crew;
+                cartaInformativa.passengers = aux.passengers;
+                cartaInformativa.cargoCapacity = aux.cargo_capacity;
+                cartaInformativa.consumables = aux.consumables;
+                cartaInformativa.hyperdriveRating = aux.hyperdrive_rating;
+                cartaInformativa.MGLT = aux.MGLT;
+                cartaInformativa.starship_class = aux.starship_class;
                 break;
         }
-        var h3 = document.createElement("h3");
-        h3.appendChild(document.createTextNode(textoCarta));
-        divPrincipal.appendChild(h3);
-        divPrincipal.style.top = (dimenciones/10) + "px";
-        divPrincipal.style.left = (dimenciones /10) + "px";
-        divPrincipal.style.height = dimenciones - (dimenciones/10) + "px";
-        divPrincipal.style.width = dimenciones - (dimenciones/10) + "px";
-        divPrincipal.style.fontSize = dimenciones/15 + "px";
-        divMenu.appendChild(divPrincipal);
-        divPrincipal.onclick = function(){
-            divMenu.removeChild(divMenu.lastChild);
-        }
+        cartaInformativa.mostrar();
+        
+       
     }
+
+    
 
     //la creacion de todos los botones
     for(var i = 0; i < maxNumBotones; i++ ){
@@ -367,10 +629,25 @@ function crearCuerpo(resultadoJson){
         botones[i].crear();
         botones[i].divBoton.onclick = onclickBoton;
     }
-   //falta la creacion de la paginacion
+
+    function crearPaginacion(){
+        if(paginaActual != Math.trunc(resultadoJson.count/10)){
+            btSiguiente = new BotonPaginacion('siguiente', BOTON_SIGUIENTE);
+            btSiguiente.crear(); 
+            btSiguiente.divBoton.onclick = function(){
+                paginaActual++;
+                descargaArchivo(resultadoJson.next);
+            } 
+        }
+        if(paginaActual != 0){
+            btAnterior = new BotonPaginacion('anterior',BOTON_ANTERIOR);
+            btAnterior.crear();
+            btAnterior.divBoton.onclick = function(){
+                paginaActual--;
+                descargaArchivo(resultadoJson.previous);
+            }
+        }
+    }
+    
+
 }
-/**
- * Me queda por hacer todo el css, pues solo esta puesto lo basico y comun,
- * implementar la paginacion y crear bien las cartas informativas de cada elemento,
- * asi como poner fotos, bordes y calcular mejor el tamaño de las letras.
- */
