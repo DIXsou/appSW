@@ -13,7 +13,7 @@ window.onload = function(){
 }
 
 var opcionActual = null; //variable global para saber en que opcion se está
-var musica = true;
+var musica = false;
 
 //recizable
 var rz = null;
@@ -118,7 +118,7 @@ Opcion.prototype.situarOpcion = function(){
         case 4:
             this.topOpcion = topMenu + dimenciones - (this.dimenOpcion/2);
             this.leftOpcion = leftMenu + (dimenciones/2) - (this.dimenOpcion/2);
-            this.srcImagen = "./image/opcion_pause.png";
+            this.srcImagen = "./image/opcion_play.png";
             break;
         case 5:
             this.topOpcion = topMenu + dimenciones - this.dimenOpcion + (this.dimenOpcion/8);
@@ -382,6 +382,10 @@ function CartaInfo(titulo){
     this.divMiniatura.className = "miniatura";
     this.divMiniatura.style.backgroundImage = "url('./image/miniatura.png')";
 
+    this.imagen = document.createElement("img");
+    this.imagen.id = "imagen";
+
+
     this.posicionar();
 }
 
@@ -390,75 +394,81 @@ CartaInfo.prototype.posicionar = function(){
     var auxWidth = dimenciones *1.5;
     this.divCarta.style.top = topMenu - (dimenciones/4) +"px";
     this.divCarta.style.left = leftMenu - (dimenciones/4) +"px";
-    this.divCarta.style.height = (dimenciones * 1.6) + "px";
+    this.divCarta.style.height = (dimenciones * 1.5) + "px";
     this.divCarta.style.width = auxWidth +"px";
     this.divCarta.style.fontSize = dimenciones/340 + "em";
 
     this.divCerrar.style.top = dimenciones/30 +"px";
-    this.divCerrar.style.left = auxWidth - dimenciones/8 +"px";
+    this.divCerrar.style.left = auxWidth - dimenciones/100 +"px";
     this.divCerrar.style.height = dimenciones/12  + "px";
     this.divCerrar.style.width = dimenciones/12 +"px";
 
     this.divMiniatura.style.height = dimenciones/5  + "px";
     this.divMiniatura.style.width = dimenciones/5 +"px";
+
+    this.imagen.style.height = dimenciones/1.5  + "px";
+    this.imagen.style.width = dimenciones/2 +"px";
 }
 
 CartaInfo.prototype.mostrar = function(){
     var titulo = document.createElement("h1");
     titulo.appendChild(document.createTextNode(this.titulo));
     this.divCarta.appendChild(titulo);
+
+    this.divCarta.appendChild(this.imagen);
     switch(opcionActual){
         case 0:
-            crearTexto(this.divCarta,"Height: "+ this.height);
-            crearTexto(this.divCarta,"Mass: "+ this.mass);
-			crearTexto(this.divCarta,"Hair Color: "+ this.hairColor);
-			crearTexto(this.divCarta,"Skin Color: "+ this.skinColor);
-			crearTexto(this.divCarta,"Eye Color: "+ this.eyeColor);
-			crearTexto(this.divCarta,"BirthYear: "+ this.birthYear);
-            crearTexto(this.divCarta,"gender: "+this.gender);
+            crearTexto(this.divCarta,"Height:  "+ this.height);
+            crearTexto(this.divCarta,"Mass:  "+ this.mass);
+			crearTexto(this.divCarta,"Hair Color:  "+ this.hairColor);
+			crearTexto(this.divCarta,"Skin Color:  "+ this.skinColor);
+			crearTexto(this.divCarta,"Eye Color:  "+ this.eyeColor);
+			crearTexto(this.divCarta,"BirthYear:  "+ this.birthYear);
+            crearTexto(this.divCarta,"gender:  "+this.gender);
             break;
         case 1:
-            crearTexto(this.divCarta,"Episode: "+this.episodeId);
-            crearTexto(this.divCarta,"Opening Crawl: "+this.openingCrawl);
-            crearTexto(this.divCarta,"Director: "+this.director);
-            crearTexto(this.divCarta,"Producer: "+this.producer);
-            crearTexto(this.divCarta,"Release Date "+this.releaseDate);
+            crearTexto(this.divCarta,"Episode:  "+this.episodeId);
+            crearTexto(this.divCarta,"Director:  "+this.director);
+            crearTexto(this.divCarta,"Producer:  "+this.producer);
+            crearTexto(this.divCarta,"Release Date:  "+this.releaseDate);
+            crearTexto(this.divCarta,"Opening Crawl:");
+            crearTexto(this.divCarta,this.openingCrawl);
             break;
         case 2:
-            crearTexto(this.divCarta,"Classification: "+this.classification);
-            crearTexto(this.divCarta,"Designation: "+this.designation);
-            crearTexto(this.divCarta,"Average Height: "+this.average_height);
-            crearTexto(this.divCarta,"Skin Colors: "+this.skinColors);
-            crearTexto(this.divCarta,"Hair Colors: "+this.hairColors);
-            crearTexto(this.divCarta,"Eye Colors: "+this.eyeColors);
-            crearTexto(this.divCarta,"Average Lifespan: "+this.averageLifespan);
-            crearTexto(this.divCarta,"Language: "+this.language);
+            crearTexto(this.divCarta,"Classification:  "+this.classification);
+            crearTexto(this.divCarta,"Designation:  "+this.designation);
+            crearTexto(this.divCarta,"Average Height:  "+this.average_height);
+            crearTexto(this.divCarta,"Skin Colors:  "+this.skinColors);
+            crearTexto(this.divCarta,"Hair Colors:  "+this.hairColors);
+            crearTexto(this.divCarta,"Eye Colors:  "+this.eyeColors);
+            crearTexto(this.divCarta,"Average Lifespan:  "+this.averageLifespan);
+            crearTexto(this.divCarta,"Language:  "+this.language);
             break;
         case 3:
-            crearTexto(this.divCarta,"Model: "+this.model);
-            crearTexto(this.divCarta,"Manufacturer: "+this.manufacturer);
-            crearTexto(this.divCarta,"Cost: "+this.cost);
-            crearTexto(this.divCarta,"Length: "+this.length);
-            crearTexto(this.divCarta,"Max Atmosphering Speed: "+this.maxAtmospheringSpeed);
-            crearTexto(this.divCarta,"Crew: "+this.crew);
-            crearTexto(this.divCarta,"Passengers: "+this.passengers);
-            crearTexto(this.divCarta,"Cargo Capacity: "+this.cargoCapacity);
-            crearTexto(this.divCarta,"Consumables: "+this.consumables);
-            crearTexto(this.divCarta,"Vehicle Class: "+this.vehicleClass);
+            crearTexto(this.divCarta,"Model:  "+this.model);
+            crearTexto(this.divCarta,"Manufacturer:  "+this.manufacturer);
+            crearTexto(this.divCarta,"Cost:  "+this.cost);
+            crearTexto(this.divCarta,"Length:  "+this.length);
+            crearTexto(this.divCarta,"Max Atmosphering Speed:  "+this.maxAtmospheringSpeed);
+            crearTexto(this.divCarta,"Crew:  "+this.crew);
+            crearTexto(this.divCarta,"Passengers:  "+this.passengers);
+            crearTexto(this.divCarta,"Cargo Capacity:  "+this.cargoCapacity);
+            crearTexto(this.divCarta,"Consumables:  "+this.consumables);
+            crearTexto(this.divCarta,"Vehicle Class:  "+this.vehicleClass);
             break;
         case 4:
-            crearTexto(this.divCarta,"Model: "+this.model);
-            crearTexto(this.divCarta,"Manufacturer: "+this.manufacturer);
-            crearTexto(this.divCarta,"Cost: "+this.cost);
-            crearTexto(this.divCarta,"Length: "+this.length);
-            crearTexto(this.divCarta,"Max Atmosphering Speed: "+this.maxAtmospheringSpeed);
-            crearTexto(this.divCarta,"Crew: "+this.crew);
-            crearTexto(this.divCarta,"Passengers: "+this.passengers);
-            crearTexto(this.divCarta,"Cargo Capacity: "+this.cargoCapacity);
-            crearTexto(this.divCarta,"Consumables: "+this.consumables);
-            crearTexto(this.divCarta,"Hyperdrive Rating: "+this.hyperdriveRating);
-            crearTexto(this.divCarta,"MGLT: "+this.MGLT);
-            crearTexto(this.divCarta,"Starship Class: "+this.starship_class);
+            crearTexto(this.divCarta,"Model:  "+this.model);
+            crearTexto(this.divCarta,"Manufacturer:  "+this.manufacturer);
+            crearTexto(this.divCarta,"Cost:  "+this.cost);
+            crearTexto(this.divCarta,"Length:  "+this.length);
+            crearTexto(this.divCarta,"Max Atmosphering Speed:  "+this.maxAtmospheringSpeed);
+            crearTexto(this.divCarta,"Crew:  "+this.crew);
+            crearTexto(this.divCarta,"Passengers:  "+this.passengers);
+            crearTexto(this.divCarta,"Cargo Capacity:  "+this.cargoCapacity);
+            crearTexto(this.divCarta,"Consumables:  "+this.consumables);
+            crearTexto(this.divCarta,"Hyperdrive Rating:  "+this.hyperdriveRating);
+            crearTexto(this.divCarta,"MGLT:  "+this.MGLT);
+            crearTexto(this.divCarta,"Starship Class:  "+this.starship_class);
             break; 
     }
     this.divCerrar.onclick = onClickCerrar;
@@ -562,6 +572,7 @@ function crearCuerpo(resultadoJson){
     function onclickBoton(evento){
         var aux = resultadoJson.results[evento.target.id];
         cartaInformativa = new CartaInfo(aux.name||aux.title);
+        cartaInformativa.imagen.src = "./image/";
         switch(opcionActual){
             case 0:
                 cartaInformativa.height = aux.height;
@@ -571,6 +582,7 @@ function crearCuerpo(resultadoJson){
                 cartaInformativa.eyeColor = aux.eye_color;
                 cartaInformativa.birthYear = aux.birth_year;
                 cartaInformativa.gender = aux.gender;
+                cartaInformativa.imagen.src += "people/";
                 break;
             case 1:
                 cartaInformativa.episodeId = aux.episode_id;
@@ -578,6 +590,7 @@ function crearCuerpo(resultadoJson){
                 cartaInformativa.director = aux.director;
                 cartaInformativa.producer = aux.producer;
                 cartaInformativa.releaseDate = aux.release_date;
+                cartaInformativa.imagen.src += "films/" ;
                 break;
             case 2:
                 cartaInformativa.classification = aux.classification;
@@ -588,6 +601,7 @@ function crearCuerpo(resultadoJson){
                 cartaInformativa.eyeColors = aux.eye_colors;
                 cartaInformativa.averageLifespan = aux.average_lifespan;
                 cartaInformativa.language = aux.language;
+                cartaInformativa.imagen.src += "species/" 
                 break;
             case 3:
                 cartaInformativa.model = aux.model;
@@ -600,6 +614,7 @@ function crearCuerpo(resultadoJson){
                 cartaInformativa.cargoCapacity = aux.cargo_capacity;
                 cartaInformativa.consumables = aux.consumables;
                 cartaInformativa.vehicleClass = aux.vehicle_class;
+                cartaInformativa.imagen.src += "vehicles/" 
                 break;
             case 4:
                 cartaInformativa.model = aux.model;
@@ -614,8 +629,10 @@ function crearCuerpo(resultadoJson){
                 cartaInformativa.hyperdriveRating = aux.hyperdrive_rating;
                 cartaInformativa.MGLT = aux.MGLT;
                 cartaInformativa.starship_class = aux.starship_class;
+                cartaInformativa.imagen.src += "starships/" 
                 break;
         }
+        cartaInformativa.imagen.src += paginaActual + evento.target.id + ".png" ;
         cartaInformativa.mostrar();
         
        
